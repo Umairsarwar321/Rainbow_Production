@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+<odoo>
+    <data>
+        <record id="inherit_view_move_form" model="ir.ui.view">
+            <field name="name">account.move.form.for.cheque.print</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(invoice_bank_cheque_print_action)d" type="action" string="Print Cheque" icon="fa-money" widget="statinfo" groups="account.group_account_manager"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherit_account_payment_for_cheque_print_form" model="ir.ui.view">
+            <field name="name">account.payment.form.for.cheque.print</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(invoice_bank_cheque_print_action)d" type="action" string="Print Cheque" icon="fa-money" widget="statinfo" groups="account.group_account_manager"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

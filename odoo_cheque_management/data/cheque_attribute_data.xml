@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+<odoo>
+    <data noupdate="1">
+        <record id="attribute_cheque_date" model="bank.cheque.attribute">
+            <field name="name">Cheque Date</field>
+            <field name="attribute">cheque_date</field>
+            <field name="demo_data">15062018</field>
+        </record>
+
+        <record id="attribute_pay_line1" model="bank.cheque.attribute">
+            <field name="name">Pay Line1 </field>
+            <field name="attribute">pay_line1</field>
+            <field name="demo_data">Webkul Software Pvt Ltd</field>
+        </record>
+
+        <record id="attribute_pay_line2" model="bank.cheque.attribute">
+            <field name="name">Pay Line2</field>
+            <field name="attribute">pay_line2</field>
+            <field name="demo_data">---------</field>
+        </record>
+
+        <record id="attribute_amount_in_words_line1" model="bank.cheque.attribute">
+            <field name="name">Amount In words Line1</field>
+            <field name="attribute">amount_line_1</field>
+            <field name="demo_data">One thousand rupess Only</field>
+        </record>
+
+        <record id="attribute_amount_in_words_line2" model="bank.cheque.attribute">
+            <field name="name">Amount In words Line2</field>
+            <field name="attribute">amount_line_2</field>
+            <field name="demo_data">-----------</field>
+        </record>
+
+        <record id="attribute_amount_box" model="bank.cheque.attribute">
+            <field name="name">Amount Box</field>
+            <field name="attribute">amount_box</field>
+            <field name="demo_data">1000/-</field>
+        </record>
+
+        <record id="attribute_account_number" model="bank.cheque.attribute">
+            <field name="name">Account Number</field>
+            <field name="attribute">account_number</field>
+            <field name="demo_data">12345678910</field>
+        </record>
+
+        <record id="attribute_ac_pay_label" model="bank.cheque.attribute">
+            <field name="name">A/C Pay Label</field>
+            <field name="attribute">ac_pay</field>
+        </record>
+    </data>
+</odoo>

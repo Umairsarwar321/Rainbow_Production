@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+<odoo>
+    <data>
+<!--        <template id="assets_frontend_bank_cheque_management" inherit_id="website.assets_frontend" name="Assets Frontend In bank Cheque Management">-->
+<!--            <xpath expr="." position="inside">-->
+<!--                <script type="text/javascript" src="/odoo_cheque_management/static/src/js/jquery_Jcrop.js"></script>-->
+<!--                <script type="text/javascript" src="/odoo_cheque_management/static/src/js/bank_cheque.js"></script>-->
+<!--            </xpath>-->
+<!--        </template>-->
+
+        <template id="bank_cheque_management_template" name="Bank Cheque Configuration &amp; Priview">
+            <t t-call="website.layout">
+                <div class="container-fluid">
+                    <div class="col-md-12 mb32">
+                        <div class="jc-demo-box">
+                            <div style="padding-bottom: 9px;margin: 40px 0 20px;border-bottom: 1px solid #cccccc;">
+                                <div class="row">
+                                    <div class='col-md-7'>
+                                        <span style="font-size: 36px;">
+                                            Uploaded Scanned Copy : 
+                                            <b>
+                                                <t t-esc="bank_cheque_obj.name"/>
+                                            </b>
+                                        </span>
+                                    </div>
+                                    <div class='col-md-5'>
+                                        <span class="alert alert-info fa fa-info-circle" style="margin-bottom:0px;">
+                                            Select cheque attribute one by one then drag box on cheque image to fill all the perameters automatically and then click on update button.
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- This is the image we're attaching Jcrop to -->
+                            <!-- <img src="demo_files/sbi_cts.jpg" id="target" alt="[Jcrop Example]" /> -->
+                            <span id="cheque_measure_unit" style="display:none">
+                                <t t-esc="bank_cheque_obj.cheque_measure_unit"/>
+                            </span>
+                            <span id="cheque_height" style="display:none">
+                                <t t-esc="bank_cheque_obj.cheque_height"/>
+                            </span>
+                            <span id="cheque_width" style="display:none">
+                                <t t-esc="bank_cheque_obj.cheque_width"/>
+                            </span>
+
+                            <!-- <span itemprop="image" t-field="bank_cheque_obj.cheque_image" id='target' t-attf-field-options="{'widget': 'image', 'style': 'height: #{str(bank_cheque_obj.cheque_height) + bank_cheque_obj.cheque_measure_unit};width: #{str(bank_cheque_obj.cheque_width) + bank_cheque_obj.cheque_measure_unit};'}" t-att-alt="bank_cheque_obj.name"/> -->
+                            <div class="row">
+                                <div class='col-md-9'>
+                                    <img id='target' t-attf-src="/website/image/res.bank/{{bank_cheque_obj.id}}/cheque_image/" t-attf-style='height: #{str(bank_cheque_obj.cheque_height) + bank_cheque_obj.cheque_measure_unit};width: #{str(bank_cheque_obj.cheque_width) + bank_cheque_obj.cheque_measure_unit};'/>
+                                    <!-- <img id='target' t-attf-src="/website/image/res.bank/{{bank_cheque_obj.id}}/cheque_image/"/> -->
+                                </div>
+                                <!-- This is the form that our event handler fills -->
+                                <div class='col-md-3'>
+                                    <form id="coords" class="coords mb16" action="/bank/cheque/update" method="POST">
+                                        <input type='hidden' name="bank_cheque_id" t-att-value="bank_cheque_obj.id" />
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <div class="inline-labels">
+                                            <div class="form-group">
+                                                <label>Select Check Attribute
+                                                </label>
+                                                <select name="cheque_attribute_line_id" class="form-control" id="cheque-attr" required="required">
+                                                    <option value=""> --- Attribute --- </option>
+                                                    <t t-foreach="bank_cheque_obj.cheque_attribute_line_ids" t-as="cheque_attribute_line">
+                                                        <option t-att-value="cheque_attribute_line.id">
+                                                            <t t-esc="cheque_attribute_line.name.name"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                            <label>Co-ordinate</label>
+                                            <div class="form-group" style="display: flex;">
+                                                <div style="width:50%;display: flex;">
+                                                    <label style="margin: auto;    width: 20%;">X<sub>1 </sub>
+                                                    </label>
+                                                    <input type="text" size="4" id="x1" name="x1" class="form-control" required="required"/>
+                                                </div>
+                                                <div style="width:50%;display: flex;padding-left: 5px;">
+                                                    <label style="margin: auto;    width: 20%;">Y<sub>1 </sub>
+                                                    </label>
+                                                    <input type="text" size="4" id="y1" name="y1" class="form-control" required="required"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" style="display: flex;">
+                                                <div style="width:50%;display: flex;">
+                                                    <label style="margin: auto;    width: 20%;">X<sub>2</sub>
+                                                    </label>
+                                                    <input type="text" size="4" id="x2" name="x2" class="form-control" required="required"/>
+                                                </div>
+                                                <div style="width:50%;display: flex;padding-left: 5px;">
+                                                    <label style="margin: auto;    width: 20%;">Y<sub>2</sub>
+                                                    </label>
+                                                    <input type="text" size="4" id="y2" name="y2" class="form-control" required="required"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" style="display: none;">
+                                                <label style="margin: auto;    width: 20%;">Width 
+                                                </label>
+                                                <input type="text" size="4" id="w" name="w" class="form-control" required="required"/>
+                                                <label style="margin: auto;    padding-left: 5px;">Px</label>
+                                            </div>
+                                            <div class="form-group" style="display: none;">
+                                                <label style="margin: auto;    width: 20%;">Height
+                                                </label>
+                                                <input type="text" size="4" id="h" name="h" class="form-control" required="required"/>
+                                                <label style="margin: auto;    padding-left: 5px;">Px</label>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary" style="width: 100%;">Update</button>
+                                        </div>
+                                    </form>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div id="cheque-attributes" class="bt16 mb16">
+                            <div class="row">
+                                <div class='col-md-7'>
+                                    <span style="font-size: 36px;">
+                                        <b>
+                                            Cheque Attributes : 
+                                        </b>
+                                    </span>
+                                </div>
+                                <div class='col-md-5'>
+                                    <a target="_blank" class="btn btn-primary pull-right" t-attf-href="/bank/cheque/preview/#{ slug(bank_cheque_obj) }">
+                                        <span class="">Cheque Preview</span>
+                                        <span class="fa fa-long-arrow-right"></span>
+                                    </a>
+                                </div>
+                            </div>
+                            <table class="table table-hover o_portal_my_doc_table">
+                                <thead>
+                                    <tr class="active">
+                                        <th>Attribute Name</th>
+                                        <!-- <th>Font Size</th> -->
+                                        <!-- <th>Font Family</th> -->
+                                        <th>Top Displacement</th>
+                                        <th>Left Displacement</th>
+                                        <th>Height</th>
+                                        <th>Width</th>
+                                    </tr>
+                                </thead>
+                                <t t-foreach="bank_cheque_obj.cheque_attribute_line_ids" t-as="cheque_attribute_line">
+                                    <tr t-attf-id="#{cheque_attribute_line.id}">
+                                        <td>
+                                            <span t-field="cheque_attribute_line.name.name"/>
+                                        </td>
+                                        <!-- <td>
+                                            <span t-field="cheque_attribute_line.font_size"/> PX
+                                        </td> -->
+                                        <!-- <td>
+                                            <span t-field="cheque_attribute_line.font_family"/>
+                                        </td> -->
+                                        <td>
+                                            <span t-field="cheque_attribute_line.top_displacement"/> PX
+                                        </td>
+                                        <td>
+                                            <span t-field="cheque_attribute_line.left_displacement"/> PX
+                                        </td>
+                                        <td>
+                                            <span t-field="cheque_attribute_line.height"/> PX
+                                        </td>
+                                        <td>
+                                            <span t-field="cheque_attribute_line.width"/> PX
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="bank_cheque_priview" name="Bank Cheque Preview">
+            <html>
+                <head></head>
+                <body style="margin:0px">
+                    <div>
+                        <img id='target' t-attf-src="/website/image/res.bank/{{bank_cheque_obj.id}}/cheque_image/" t-attf-style='height: #{str(bank_cheque_obj.cheque_height) + bank_cheque_obj.cheque_measure_unit};width: #{str(bank_cheque_obj.cheque_width) + bank_cheque_obj.cheque_measure_unit};'/>
+                        <div style="margin: 0px 15px 0px 15px;">
+                            <t t-foreach="bank_cheque_obj.cheque_attribute_line_ids" t-as="bank_cheque_line_obj">
+                                <div t-attf-style='
+                                    position: absolute;
+                                    top: #{str(bank_cheque_line_obj.top_displacement) + "px"}; 
+                                    left: #{str(bank_cheque_line_obj.left_displacement) + "px"};
+                                    height: #{str(bank_cheque_line_obj.height) + "px"};
+                                    width: #{str(bank_cheque_line_obj.width) + "px"};
+                                    margin-top:00pt;
+                                    letter-spacing: #{"12px" if bank_cheque_line_obj.name.attribute == "cheque_date" else "00px"};
+                                    '>
+                                    <t t-esc="bank_cheque_line_obj.name.demo_data"/>
+                                </div>
+                                <!-- <div t-if="bank_cheque_line_obj.name.attribute == 'ac_pay'" style="position: absolute;    top: 0px;    left: -20px;    width: 110px;    margin-top: 14pt;    letter-spacing: 00px;    border-top: 1px solid black;    border-bottom: 1px solid black;    transform: rotate(-40deg);    text-align: center;">A/C Pay</div> -->
+                                <t t-if="bank_cheque_line_obj.name.attribute == 'ac_pay'">
+                                    <div t-if="not (bank_cheque_line_obj.top_displacement and bank_cheque_line_obj.left_displacement and bank_cheque_line_obj.height and bank_cheque_line_obj.width)" style="position: absolute;top: 0px;    left: -20px;width: 110px;margin-top: 14pt;letter-spacing: 00px;border-top: 1px solid black;border-bottom: 1px solid black;transform: rotate(-40deg);text-align: center;">A/C Pay</div>
+                                    <div t-else="" t-attf-style='position: absolute;
+                                        top: #{str(bank_cheque_line_obj.top_displacement) + "px"}; 
+                                        left: #{str(bank_cheque_line_obj.left_displacement) + "px"};
+                                        font-size: 20px;
+                                        margin-top:00pt;
+                                        border-top: 1px solid black;
+                                        border-bottom: 1px solid black;
+                                        padding: 5px;'>A/C Pay
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </body>
+            </html>
+        </template>
+
+        <template id="bank_cheque_minimal_layout">
+            <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
+            &lt;!DOCTYPE html&gt;
+            <html style="height: 0;">
+                <head>
+                    <t t-call-assets="web.report_assets_pdf" t-js="false"/>
+                    <t t-call-assets="web.report_assets_common" t-js="false"/>
+                    <t t-call-assets="web.report_assets_pdf" t-css="false"/>
+                    <t t-call-assets="web.report_assets_common" t-css="false"/>
+                    <meta charset="utf-8"/>
+                    <t t-if="subst is True">
+                        <script>
+                            function subst() {
+                                var vars = {};
+                                var x = document.location.search.substring(1).split('&amp;');
+                                for (var i in x) {
+                                    var z = x[i].split('=', 2);
+                                    vars[z[0]] = unescape(z[1]);
+                                }
+                                var fromPage = document.getElementsByClassName('page');
+                                for(var j = 0; j&lt;fromPage.length; j++)
+                                    fromPage[j].textContent = vars['sitepage'];
+                                var toPage = document.getElementsByClassName('topage');
+                                for(var j = 0; j&lt;toPage.length; j++)
+                                    toPage[j].textContent = vars['sitepages'];
+
+                                var index = vars['webpage'].split('.', 4)[3]
+                                var header = document.getElementById('minimal_layout_report_headers');
+                                if(header !== null){
+                                    var companyHeader = header.children[index];
+                                    header.textContent = '';
+                                    header.appendChild(companyHeader);
+                                }
+                                var footer = document.getElementById('minimal_layout_report_footers');
+                                if(footer !== null){
+                                    var companyFooter = footer.children[index];
+                                    footer.textContent = '';
+                                    footer.appendChild(companyFooter);
+                                }
+                            }
+                        </script>
+                    </t>
+                </head>
+                <body style="margin: 0px;">
+                    <t t-raw="body"/>
+                </body>
+            </html>
+        </template>
+    </data>
+</odoo>

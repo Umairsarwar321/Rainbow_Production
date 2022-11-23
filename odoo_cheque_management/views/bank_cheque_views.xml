@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+<odoo>
+    <data>
+        <!-- views and menus -->
+        <record id="bank_cheque_view_form" model="ir.ui.view">
+            <field name="name">bank.cheque.form.view</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[2]" position="after">
+                    <group>
+                        <group name="bank_cheque" string="Bank Cheque">
+                            <field name="cheque_measure_unit"/>
+                            <field name="cheque_height"/>
+                            <field name="cheque_width"/>
+                            <field name="max_char_in_line1"/>
+                        </group>
+                        <group name="cheque_image">
+                            <div class="">
+                                <div class="">
+                                    <label for="cheque_image" style="font-weight: bold;"/>
+                                </div>
+                                <field name="cheque_image" widget='image' class="" nolabel="1"/>
+                            </div>
+                        </group>
+                        <label for="cheque_attribute_line_ids" style="font-weight: bold;"/>
+                        <button name="redirect_to_bank_cheque_page" type="object" string="Configure Attributes" style="float:right" icon="fa-cog fa-spin" class="oe_highlight"/>
+                        <br/>
+                    </group>
+                    <field name="cheque_attribute_line_ids">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="font_size"/>
+                            <field name="letter_spacing"/>
+                            <field name="top_displacement"/>
+                            <field name="left_displacement"/>
+                            <field name="height"/>
+                            <field name="width"/>
+                            <button name="reset_values" string="Reset" class="fa fa-undo" type="object"/>
+                        </tree>
+                        <form>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group col="4" string="CSS Attributes">
+                                <field name="font_size"/>
+                                <field name="letter_spacing"/>
+                                <field name="top_displacement"/>
+                                <field name="left_displacement"/>
+                                <field name="bottom_displacement"/>
+                                <field name="right_displacement"/>
+                                <field name="height"/>
+                                <field name="width"/>
+                            </group>
+                            <button name="reset_values" string="Reset" icon="fa-undo" class="oe_highlight" type="object" title="Reset Values"/>
+                        </form>
+                    </field>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="bank_cheque_attribute_view_form" model="ir.ui.view">
+            <field name="name">bank.cheque.attribute.form.view</field>
+            <field name="model">bank.cheque.attribute</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="attribute"/>
+                                <field name="date_format" attrs="{'invisible':[('attribute', '!=', 'cheque_date')], 'required':[('attribute', '=', 'cheque_date')]}"/>
+                            </group>
+                            <group>
+                                <field name="demo_data" attrs="{'invisible':[('attribute', '=', 'cheque_date')]}"/>
+                                <field name="demo_data_date" attrs="{'invisible':[('attribute', '!=', 'cheque_date')]}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="bank_cheque_template_view_form" model="ir.ui.view">
+            <field name="name">bank.cheque.book.form.view</field>
+            <field name="model">bank.cheque.book</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="id" invisible="1"/>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="bank_cheque_id"/>
+                                <field name="account_number"/>
+                                <!-- <field name="currency_id"/> -->
+                            </group>
+                            <group>
+                                <field name="cheque_book_leaves" attrs="{'readonly':[('issued_cheque_history_ids', '!=', [])]}"/>
+                                <label for="initial_cheque_number" string="Cheque Numbers"/>
+                                <div>
+                                    <b>From: </b>
+                                    <field name="initial_cheque_number" class="oe_inline" attrs="{'readonly':[('issued_cheque_history_ids', '!=', [])]}"/>
+                                    <br/>
+                                    <b>To: </b>
+                                    <field name="last_cheque_number" attrs="{'readonly':[('issued_cheque_history_ids', '!=', [])]}" class="oe_inline"/>
+                                    <button name="btn_create_cheque_leaves" type="object" string="Create Cheque Leaves" class="btn-xs btn-primary" attrs="{'invisible':['|', ('id', '=', False), ('issued_cheque_history_ids', '!=', [])]}"/>
+                                </div>
+                            </group>
+                        </group>
+                        <label for="issued_cheque_history_ids"/>
+                        <field name="issued_cheque_history_ids">
+                            <tree editable="bottom" decoration-danger="state == 'cancelled'" create="0" delete="0">
+                                <!-- <field name="name" readonly="1"/> -->
+                                <field name="id" invisible="1"/>
+                                <field name="bank_cheque_book_id" invisible="1"/>
+                                <field name="state" readonly="1" invisible="0"/>
+                                <field name="cheque_number" attrs="{'readonly':[('issued', '=', True)]}" required="1"/>
+                                <field name="paid_to" attrs="{'readonly':[('issued', '=', True)]}" required="1"/>
+                                <field name="issue_date" attrs="{'readonly':[('issued', '=', True)]}" required="1"/>
+                                <field name="amount" widget="monetary" attrs="{'readonly':[('issued', '=', True)]}" required="1"/>
+                                <field name="currency_id" invisible="1" attrs="{'readonly':[('issued', '=', True)]}"/>
+                                <field name="issued" readonly="1" invisible="1"/>
+                                <button name="print_cheque" string="Print Cheque" icon="fa-print" type="object" attrs="{'invisible':[('state', '=', 'cancelled')]}"/>
+                                <button name="do_cancel_cheque" string="Cancel now" icon="fa-times" type="object" attrs="{'invisible':[('state', '=', 'cancelled')]}"/>
+                            </tree>
+                            <form>
+                                <field name="id" invisible="1"/>
+                                <header>
+                                    <field name="state" widget="statusbar"/>
+                                </header>
+                                <group>
+                                    <group>
+                                        <field name="bank_cheque_book_id" invisible="1"/>
+                                        <field name="cheque_number" attrs="{'readonly':[('issued', '=', True)]}"/>
+                                        <field name="paid_to" attrs="{'readonly':[('issued', '=', True)]}"/>
+                                        <field name="customer_id" attrs="{'readonly':[('issued', '=', True)]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="issue_date" attrs="{'readonly':[('issued', '=', True)]}"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="issued" readonly="1"/>
+                                    </group>
+                                </group>
+                                <button name="print_cheque" string=" Print Cheque" icon="fa-print" type="object" class="btn-success" attrs="{'invisible':[('state', '=', 'cancelled')]}" title="Print Cheque"/>
+                                <button name="do_cancel_cheque" string=" Cancel Now" icon="fa fa-times" type="object" attrs="{'invisible':[('state', '=', 'cancelled')]}" class="btn-danger"/>
+                            </form>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="bank_cheque_attribute_view_tree" model="ir.ui.view">
+            <field name="name">bank.cheque.attribute.view.tree</field>
+            <field name="model">bank.cheque.attribute</field>
+            <field name="arch" type="xml">
+                <tree string="Bank Cheque Attributes">
+                    <field name="name"/>
+                    <field name="attribute"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="bank_cheque_template_view_tree" model="ir.ui.view">
+            <field name="name">bank.cheque.book.view.tree</field>
+            <field name="model">bank.cheque.book</field>
+            <field name="arch" type="xml">
+                <tree string="Bank Cheque Template">
+                    <field name="name"/>
+                    <field name="bank_cheque_id"/>
+                    <field name="cheque_book_leaves"/>
+                    <field name="initial_cheque_number"/>
+                    <field name="last_cheque_number"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- actions -->
+        <record id="bank_cheque_action" model="ir.actions.act_window">
+            <field name="name">Bank Cheques</field>
+            <field name="res_model">res.bank</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="bank_cheque_attribute_action" model="ir.actions.act_window">
+            <field name="name">Bank Cheque Attributes</field>
+            <field name="res_model">bank.cheque.attribute</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="bank_cheque_book_action" model="ir.actions.act_window">
+            <field name="name">Bank Cheque Books</field>
+            <field name="res_model">bank.cheque.book</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="wk_bank_cheque_management_menu" name="Bank Cheque" parent="account.menu_finance" sequence="6" groups="account.group_account_manager" />
+
+        <menuitem id="bank_cheque_template_menu" name="Cheque Books" parent="wk_bank_cheque_management_menu" action="bank_cheque_book_action" sequence="1"/>
+
+        <menuitem id="bank_cheque_menu" name="Banks" parent="wk_bank_cheque_management_menu" action="bank_cheque_action" sequence="2" />
+
+        <menuitem id="bank_cheque_attribute_menu" name="Cheque Attributes" parent="wk_bank_cheque_management_menu" action="bank_cheque_attribute_action" sequence="3" />
+    </data>
+</odoo>

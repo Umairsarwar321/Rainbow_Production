@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_cheque_attribute_line,cheque_attribute_line.manager,model_bank_cheque_attribute_line,account.group_account_manager,1,1,1,1
+access_bank_cheque_attribute,bank_cheque_attribute.manager,model_bank_cheque_attribute,account.group_account_manager,1,1,1,1
+access_bank_cheque_book,bank_cheque_book.manager,model_bank_cheque_book,account.group_account_manager,1,1,1,1
+access_bank_cheque_history,bank_cheque_history.manager,model_issued_bank_cheque_history,account.group_account_manager,1,1,1,1
+access_invoice_print_bank_cheque_wizard,invoice.print.bank.cheque.wizard,model_invoice_print_bank_cheque_wizard,,1,1,1,1
