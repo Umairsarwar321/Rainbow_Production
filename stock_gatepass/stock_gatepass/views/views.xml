@@ -1,0 +1,569 @@
+<odoo>
+    <record id="view_gatepass_form" model="ir.ui.view">
+        <field name="name">stock.gatepass.form</field>
+        <field name="model">stock.gatepass</field>
+        <field name="arch" type="xml">
+            <form string="Gate Pass" version="7.0">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" states="draft"/>
+
+                    <field name="state" widget="statusbar"/>
+
+                </header>
+                <sheet>
+
+                    <h2>
+                        <field name="name"/>
+                    </h2>
+                    <group string="Gate Pass Information">
+                        <group>
+                            <field name="visitor_name" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="phone_number" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="reasone" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="picking_ref" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="origin" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                        </group>
+                        <group>
+                            <field name="email" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="visitor_company" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="type" attrs="{'readonly' : [('state','!=','draft')]}" required="1"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="In Out Details">
+                            <field name="time_out" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                        </group>
+
+
+                        <group string="Contact Information" cols="6">
+                            <field name="employee_id" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="department_id" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="created_by_id" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="company_id" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name="line_ids">
+                                <tree string="Products" editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="gate_in_qty"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gatepass_out_form" model="ir.ui.view">
+        <field name="name">stock.gatepass.out.form</field>
+        <field name="model">stock.gatepass</field>
+        <field name="arch" type="xml">
+            <form string="Gate Pass" version="7.0">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" states="draft"/>
+
+                    <field name="state" widget="statusbar"/>
+
+                </header>
+                <sheet>
+
+                    <h2>
+                        <field name="name"/>
+                    </h2>
+                    <group string="Gate Pass Information">
+                        <group>
+                            <field name="visitor_name" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="phone_number" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="reasone" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="picking_ref" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="origin" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                        </group>
+                        <group>
+                            <field name="email" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="visitor_company" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="In Out Details">
+                            <field name="time_out" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                        </group>
+
+
+                        <group string="Contact Information" cols="6">
+                            <field name="employee_id" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="department_id" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="created_by_id" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="company_id" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name="line_ids">
+                                <tree string="Products" editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="gate_out_qty"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gate_pass_tree" model="ir.ui.view">
+        <field name="name">stock.gatepass.tree</field>
+        <field name="model">stock.gatepass</field>
+        <field name="arch" type="xml">
+            <tree string="Gate Passes">
+                <field name="name" string="GatePass Ref"/>
+                <field name="visitor_name"/>
+                <field name="origin"/>
+                <field name="partner_id"/>
+                <field name="visitor_company"/>
+                <field name="time_in"/>
+                <field name="time_out"/>
+                <field name="employee_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="stock_picking_view_form_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="create_gatepass" string="Generate Gate Pass" type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', ('gate_pass_id', '!=', False), '|', ('picking_type_code', '!=', 'incoming'), ('company_id', 'in', [1, 2])]}"/>
+                <button name="create_inspection" string="Generate Inspection" type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', ('inspection_id', '!=', False), '|', ('gate_pass_id', '=', False), ('picking_type_code', '!=', 'incoming')]}"/>
+                <button name="generate_gatepass_out" string="Generate Gate Pass Out" type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', '&amp;', ('is_visible_gatepass_out', '=', False), ('picking_type_code', '!=', 'outgoing'), '|', '&amp;', ('is_visible_gatepass_out', '!=', False), ('gatepass_out_id', '!=', False), '|', '&amp;', ('gatepass_out_id', '!=', False), ('picking_type_code', '=', 'outgoing'), ('company_id', 'in', [1, 2])]}"/>
+            </xpath>
+            <xpath expr="//group/group[2]" position="inside">
+                <field name="gate_pass_id" context="{'form_view_ref' : 'stock_gatepass.view_gatepass_form'}"
+                       attrs="{'invisible': ['|', ('picking_type_code', '!=', 'incoming'), ('company_id', 'in', [1, 2])]}"/>
+                <field name="inspection_id"
+                       attrs="{'invisible': ['|', ('picking_type_code', '!=', 'incoming'), ('company_id', 'in', [1, 2])]}"/>
+                <field name="gatepass_out_id" context="{'form_view_ref' : 'stock_gatepass.view_gatepass_out_form'}"
+                       attrs="{'invisible': ['&amp;', ('is_visible_gatepass_out', '=', False), '|', ('picking_type_code', '!=', 'outgoing'), ('company_id', 'in', [1, 2])]}"/>
+                <field name="is_visible_gatepass_out" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="gate_pass_wizard_view_form_inherit" model="ir.ui.view">
+        <field name="name">gate.pass.wizard.form</field>
+        <field name="model">gate.pass.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <separator string="Gate Pass"/>
+                <group>
+                    <group>
+                        <field name="visitor_name"/>
+                        <field name="picking_ref"/>
+                        <field name="phone_number"/>
+                        <field name="origin"/>
+                        <field name="created_by_id" readonly="True"/>
+                        <field name="picking_type_code" invisible="1"/>
+                        <div>
+                            <label for="time_out" string="Date Time Out"
+                                   attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
+                            <label for="time_out" string="Date Time In"
+                                   attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
+                            <field name="time_out" required="1" nolabel="1" class="oe_inline"/>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="department_id"/>
+                        <field name="company_id" readonly="True"/>
+                    </group>
+                </group>
+                <br/>
+                <field name="reasone"/>
+                <footer>
+                    <button name="generate_gatepass" string="Create" type="object" class="oe_highlight"/>
+                    <button class="oe_link" string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_inspection_view_form" model="ir.ui.view">
+        <field name="name">product.inspection.form</field>
+        <field name="model">product.inspection</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" states="draft"/>
+
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group col="4">
+                        <field name="picking_ref" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                        <field name="po_ref" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                        <field name="gatepass_ref" attrs="{'readonly' : [('state','!=','draft')]}"/>
+                        <field name="reasone"/>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name="line_ids" attrs="{'readonly' : [('state','!=','draft')]}">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="gate_in_qty" readonly="1"/>
+                                    <field name="accepted_qty"/>
+                                    <field name="rejected_qty"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="visitor_pass_action" model="ir.actions.act_window">
+        <field name="name">Gate Passes</field>
+        <field name="res_model">stock.gatepass</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('name', 'ilike', 'GTPS/IN%')]</field>
+    </record>
+
+    <record id="gate_out_action" model="ir.actions.act_window">
+        <field name="name">Gate Passes</field>
+        <field name="res_model">stock.gatepass</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('name', 'ilike', 'GTPS/OUT%')]</field>
+    </record>
+
+    <record id="product_inspection_action" model="ir.actions.act_window">
+        <field name="name">Inspections</field>
+        <field name="res_model">product.inspection</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="main_menu_visitor" name="Gate Passes" sequence="20"
+              web_icon="stock_gatepass,static/description/icon.png"/>
+
+    <menuitem id="sub_menu_visitor" name="Gate Passes" parent="main_menu_visitor" sequence="20"/>
+
+    <menuitem id="menu_company_visitors" name="Gate In" parent="sub_menu_visitor" sequence="29"
+              action="visitor_pass_action"/>
+
+    <menuitem id="menu_gate_out" name="Gate Out" parent="sub_menu_visitor" sequence="29" action="gate_out_action"/>
+
+    <menuitem id="menu_inspection" name="Inspection" action="product_inspection_action" parent="main_menu_visitor"/>
+
+    <template id="report_visitor">
+        <t t-call="web.html_container">
+            <t t-set="data_report_dpi" t-value="110"/>
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="stock_gatepass.report_visitor_template"/>
+            </t>
+        </t>
+    </template>
+
+    <report
+            id="action_report_visitor_pass"
+            model="stock.gatepass"
+            name="stock_gatepass.report_visitor"
+            string="Gate In / Out"
+            report_type="qweb-pdf"
+    />
+
+    <template id="report_visitor_template">
+        <t t-call="web.external_layout">
+            <t t-set="doc" t-value="doc.with_context({})"/>
+            <div class="page">
+
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <h1 style="text-align: center;font-style:normal;">Gate Pass</h1>
+                <h2>
+                    <span t-field="doc.name"/>
+                </h2>
+                <h3>Gate Pass Information</h3>
+
+                <div class="row" id="journal_information">
+                    <div class="col-8">
+                        <div>
+                            <strong>Visitor Name:</strong>
+                            <p t-field="doc.visitor_name"/>
+                        </div>
+
+                        <div class="text-left">
+                            <strong>Phone No. :</strong>
+                            <p t-field="doc.phone_number"/>
+                        </div>
+
+                        <div class="text-left">
+                            <strong>Reason :</strong>
+                            <p t-field="doc.reasone"/>
+                        </div>
+                    </div>
+
+                    <div class="col-8">
+                        <div>
+                            <strong>Visitor Company :</strong>
+                            <p t-field="doc.visitor_company.name"/>
+                        </div>
+                        <div class="text-left">
+                            <strong>Email :</strong>
+                            <p t-field="doc.email"/>
+                        </div>
+                    </div>
+                </div>
+
+                <br/>
+                <br/>
+
+                <table style="width: 100%;">
+                    <thead>
+                        <tr class="text-center">
+                            <th>In Out Details</th>
+                            <th/>
+
+                            <th>Contact Information</th>
+                        </tr>
+                    </thead>
+                    <tr style="padding: 8px;text-align: left;font-style:normal;">
+                        <td>
+                            <strong>Date Time In :</strong>
+                        </td>
+                        <td>
+                            <span t-field="doc.time_in"/>
+                        </td>
+
+                        <td>
+                            <strong>Employee :</strong>
+                        </td>
+                        <td>
+                            <span t-field="doc.employee_id.name"/>
+                        </td>
+                    </tr>
+
+                    <tr style="padding: 8px;text-align: left;font-style:normal;">
+                        <td>
+                            <strong>Date Time Out :</strong>
+                        </td>
+                        <td>
+                            <span t-field="doc.time_out"/>
+                        </td>
+
+                        <td>
+                            <strong>Department :</strong>
+                        </td>
+                        <td>
+                            <span t-field="doc.department_id.name"/>
+                        </td>
+
+
+                    </tr>
+
+                    <tr style="padding: 8px;text-align: left;font-style:normal;">
+                        <td/>
+                        <td/>
+
+                        <td>
+                            <strong>Created By :</strong>
+                        </td>
+                        <td>
+                            <span t-field="doc.created_by_id.name"/>
+                        </td>
+                    </tr>
+                </table>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <th>#</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Gate In Quantity</th>
+                    </thead>
+                    <tbody>
+                        <t t-set="serial_no" t-value="1"/>
+                        <tr t-foreach="doc.line_ids" t-as="record">
+                            <td>
+                                <span t-esc="serial_no"/>
+                            </td>
+                            <td>
+                                <span t-field="record.product_id"/>
+                            </td>
+                            <td>
+                                <span t-field="record.product_qty"/>
+                            </td>
+                            <td>
+                                <span t-field="record.gate_in_qty"/>
+                            </td>
+                            <t t-set="serial_no" t-value="serial_no + 1"/>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!--                <div style="padding: 25px;text-align: right;font-style:normal;">-->
+                <!--                    <h4>Date :___/___/_______</h4>-->
+                <!--                    <h4>Signature :__________</h4>-->
+                <!--                </div>-->
+            </div>
+        </t>
+    </template>
+
+    <template id="report_invoice_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[3]/div[hasclass('text-center')]" position="before">
+            <t t-if="o._name in ('stock.gatepass', 'product.inspection')">
+                <style>
+                    hr {
+                    border-top: 1px solid black;
+                    }
+                </style>
+                <div class="row col-12" style="margin-top: 45px;">
+                    <div class="col-3 text-center">
+                        <span t-field="doc.create_uid"/>
+                        <hr/>
+                        Prepared by
+                    </div>
+                    <div class="col-3 text-center">
+                        <br/>
+                        <hr/>
+                        Checked by
+                    </div>
+                    <div class="col-3 text-center">
+                        <br/>
+                        <hr/>
+                        Approved by
+                    </div>
+                    <div class="col-3 text-center">
+                        <br/>
+                        <hr/>
+                        Received by
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <report
+            id="action_report_inspection"
+            model="product.inspection"
+            name="stock_gatepass.report_inspection"
+            string="Inspection Report"
+            report_type="qweb-pdf"
+    />
+
+    <template id="report_inspection">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h3 style="text-align: center;">Inspection Report</h3>
+                        <h2>
+                            <span t-field="doc.name"/>
+                        </h2>
+                        <table class="table table-condensed">
+
+                            <tr style="text-align: left;border-top: 1px solid #ddd;font-style:normal;">
+                                <td>
+                                    <strong>Picking:</strong>
+                                </td>
+                                <td>
+                                    <span t-field="doc.picking_ref"/>
+                                </td>
+
+
+                                <td>
+                                    <strong>Purchase Reference :</strong>
+                                </td>
+                                <td>
+                                    <span t-field="doc.po_ref"/>
+                                </td>
+
+
+                            </tr>
+
+                            <tr style="text-align: left;border-top: 1px solid #ddd;font-style:normal;">
+
+                                <td>
+                                    <strong>GatePass Reference :</strong>
+                                </td>
+                                <td>
+                                    <span t-field="doc.gatepass_ref"/>
+                                </td>
+
+                                <td>
+                                    <strong>Reasone :</strong>
+                                </td>
+                                <td>
+                                    <span t-field="doc.reasone"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table class="table table-condensed">
+                            <thead>
+                                <th>#</th>
+                                <th>Product</th>
+                                <th>Gate In Quantity</th>
+                                <th>Accepted Qty</th>
+                                <th>Rejected Qty</th>
+                            </thead>
+                            <tbody>
+                                <t t-set="serial_no" t-value="1"/>
+                                <tr t-foreach="doc.line_ids" t-as="record">
+                                    <td>
+                                        <span t-esc="serial_no"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="record.product_id"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="record.gate_in_qty"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="record.accepted_qty"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="record.rejected_qty"/>
+                                    </td>
+                                    <t t-set="serial_no" t-value="serial_no + 1"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_gatepass,stock.gatepass,model_stock_gatepass,stock.group_stock_user,1,1,1,1
+access_stock_gatepass_line,stock.gatepass.line,model_stock_gatepass_line,stock.group_stock_user,1,1,1,1
+access_gate_pass_wizard,gate.pass.wizard,model_gate_pass_wizard,,1,1,1,1
+access_product_inspection,product.inspection,model_product_inspection,,1,1,1,1
+access_product_inspection_line,product.inspection.line,model_product_inspection_line,,1,1,1,1
