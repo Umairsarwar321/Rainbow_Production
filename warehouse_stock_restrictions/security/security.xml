@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    	<record id="group_restrict_warehouse" model="res.groups">
+            <field name="name">Resrict Stock warehouses</field>
+        </record>
+
+        <record id="group_picking_button" model="res.groups">
+            <field name="name">Show Picking Button</field>
+        </record>
+
+        <record id="group_picking_return" model="res.groups">
+            <field name="name">Allow picking return</field>
+        </record>
+
+        <record id="filter_user_stock_picking_type_allowed_new" model="ir.rule">
+            <field name="name">Filter Stock Picking Type Allowed new</field>
+            <field name="model_id" search="[('model','=','stock.picking.type')]" model="ir.model"/>
+            <field name="groups" eval="[(4, ref('group_restrict_warehouse'))]"/>
+            <field name="domain_force">[('id','in', [ p.id for p in user.default_picking_type_ids ])]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="stock_picking_user_location_rule_" model="ir.rule">
+            <field name="name">Show User Location Transfers</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="domain_force">[
+                '|', ('location_id', 'in', user.stock_location_ids.filtered(lambda x: x.is_default).mapped('location_id').ids),
+                ('location_dest_id', 'in', user.stock_location_ids.mapped('location_id').ids)
+            ]</field>
+            <field name="groups" eval="[(4, ref('stock.group_stock_user'))]"/>
+        </record>
+
+        <record id="stock_picking_manager_location_rule_" model="ir.rule">
+            <field name="name">Show Manager Location Transfers</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('stock.group_stock_manager'))]"/>
+        </record>
+        <record id="stock_quant_location_rule_user" model="ir.rule">
+            <field name="name">Show User Quant</field>
+            <field name="model_id" ref="stock.model_stock_quant"/>
+            <field name="domain_force">[('location_id', 'in', user.stock_location_ids.mapped('location_id').ids)]</field>
+            <field name="groups" eval="[(4, ref('stock.group_stock_user'))]"/>
+        </record>
+        <record id="stock_quant_location_rule_manager" model="ir.rule">
+            <field name="name">Show Manager Quant</field>
+            <field name="model_id" ref="stock.model_stock_quant"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('stock.group_stock_manager'))]"/>
+        </record>
+
+<!--         <record id="stock_location_rule_manager" model="ir.rule">
+            <field name="name">Show Manager Location</field>
+            <field name="model_id" ref="stock.model_stock_location"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('stock.group_stock_manager'))]"/>
+        </record>
+
+        <record id="stock_location_rule_user" model="ir.rule">
+            <field name="name">Show User Location</field>
+            <field name="model_id" ref="stock.model_stock_location"/>
+            <field name="domain_force">[
+                '|', ('id', 'in', user.stock_location_ids.ids),
+                ('id', 'child_of', user.stock_location_ids.ids)
+            ]</field>
+            <field name="groups" eval="[(4, ref('stock.group_stock_user'))]"/>
+        </record> -->
+
+    </data>
+</odoo>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_users_form" model="ir.ui.view">
+            <field name="name">usability.default_warehouse.res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <group name="messaging" position="before">
+                    <group string="Warehouse Restrictions" attrs="{'invisible': [('login','=', 'admin')]}">
+                        <field name="default_picking_type_ids" widget="many2many_tags" attrs="{'invisible': [('login','=', 'admin')]}"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <record id="view_location_security_users_form" model="ir.ui.view">
+            <field name="name">location_security.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <group name="messaging" position="before">
+                    <group string="Locations" attrs="{'invisible': [('login','=', 'admin')]}">
+                        <field name="restrict_locations" attrs="{'invisible': [('login','=', 'admin')]}"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Allowed Stock Locations" attrs="{'invisible': [('restrict_locations','!=', True)]}">
+                        <!-- <field name="stock_location_ids" nolabel="1" colspan="2"/> -->
+                        <field name="stock_location_ids" widget="one2many" nolabel="1">
+                            <tree string="Locations" editable="bottom">
+                                <field name="location_id"/>
+                                <field name="is_default"/>
+                                <field name="is_src"/>
+                                <field name="is_dest"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+        <record id="view_picking_form_inherit_stock_restrict" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit.stock.restrict</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_scrap']" position="attributes">
+                    <attribute name="groups">warehouse_stock_restrictions.group_picking_button
+                    </attribute>
+                </xpath>
+                <xpath expr="//button[@name='do_unreserve']" position="attributes">
+                    <attribute name="groups">warehouse_stock_restrictions.group_picking_button
+                    </attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="attributes">
+                    <attribute name="groups">warehouse_stock_restrictions.group_picking_button
+                    </attribute>
+                </xpath>
+                <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="attributes">
+                    <attribute name="groups">warehouse_stock_restrictions.group_picking_return
+                    </attribute>
+                </xpath>
+            </field>
+        </record>
+        <menuitem id="stock.menu_warehouse_report" name="Reporting" sequence="99" parent="stock.menu_stock_root" groups="stock.group_stock_user"/>
+        <menuitem action="stock.action_procurement_compute" id="stock.menu_procurement_compute" parent="stock.menu_stock_warehouse_mgmt" sequence="135" groups="stock.group_stock_manager"/>
+        <menuitem
+            id="stock.menu_stock_scrap" name="Scrap" parent="stock.menu_stock_warehouse_mgmt" action="stock.action_stock_scrap" sequence="99" groups="stock.group_stock_manager"/>
+<!--        <menuitem action="stock.action_inventory_form" id="stock.menu_action_inventory_form" parent="stock.menu_stock_warehouse_mgmt" sequence="30" groups="stock.group_stock_manager"/>-->
+<!--        <menuitem-->
+<!--            id="stock.menu_reordering_rules_config"-->
+<!--            action="stock.action_orderpoint_form"-->
+<!--            name="Reordering Rules" parent="stock.menu_stock_inventory_control" sequence="10" groups="stock.group_stock_manager"/>-->
+        <menuitem action="stock.action_production_lot_form" id="stock.menu_action_production_lot_form"
+        parent="stock.menu_stock_inventory_control" groups="stock.group_stock_manager"
+        sequence="101"/>
+        <menuitem id="stock.menu_forecast_inventory" name="Forecasted Inventory" parent="stock.menu_warehouse_report" sequence="101" action="stock.report_stock_quantity_action" groups="stock.group_stock_manager"/>
+        <menuitem action="stock.stock_move_action" id="stock.stock_move_menu" parent="stock.menu_warehouse_report" sequence="140" groups="stock.group_stock_manager"/>
+    </data>
+</openerp>
