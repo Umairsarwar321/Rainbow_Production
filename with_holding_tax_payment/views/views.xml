@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+        <!-- Account Tax Form Inherit -->
+        <record id="inherit_form_account_tax" model="ir.ui.view">
+            <field name="name">inherit_form_account_tax</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group//group//div" position="after">
+                    <label for="is_with_holding"/>
+                    <div>
+                        <field name="is_with_holding" class="oe_inline" nolabel="1"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Account Payment Form Inherit -->
+        <record id="account_payment_form_inherit" model="ir.ui.view">
+            <field name="name">account_payment_form_inherit</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group//group//label" position="before">
+                    <field name="total_amount" force_save="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="tax_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="tax_amount" force_save="1" readonly="1"/>
+                </xpath>
+                <xpath expr="//label[@for='amount']" position="attributes">
+                    <attribute name="string">Partner Payment</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
