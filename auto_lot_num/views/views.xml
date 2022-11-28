@@ -1,0 +1,39 @@
+<odoo>
+    <data>
+
+        <record id="stock_move_wizard_form_inherit" model="ir.ui.view">
+            <field name="name">stock_move_wizard_form_inherit</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_stock_move_nosuggest_operations"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="inside">
+                    <group>
+                        <field name="for_qty"/>
+                        <button name="generate_lot_num" string="Generate Lot Number" type="object"
+                                class="oe_highlight"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+        <record id="product_product_form_inherit" model="ir.ui.view">
+            <field name="name">product_form_inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tracking']" position="after">
+                    <field name="prefix" attrs="{'required': [('tracking', 'in', ('lot'))]}"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="product_template_form_inherit" model="ir.ui.view">
+            <field name="name">product_template_form_inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tracking']" position="after">
+                    <field name="prefix" attrs="{'required': [('tracking', 'in', ('lot'))]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
