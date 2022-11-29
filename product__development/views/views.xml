@@ -1,0 +1,44 @@
+<odoo>
+    <data>
+        <record id="product_development_inherit_id" model="ir.ui.view">
+            <field name="name">Product</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//form/sheet/notebook/page[@name='invoicing']" position="after">
+                    <page string="Cylinder">
+                        <group>
+                            <group>
+                                <field name="unit_width_mm"/>
+                                <field name="ups"/>
+                                <field name="print_size_mm"/>
+                                <field name="cylinder_length_mm"/>
+                                <field name="unit_col"/>
+                                <field name="col_repeat"/>
+                                <field name="circum_dia"/>
+                            </group>
+                            <group>
+                                <field name="name_type"/>
+                                <field name="art_no"/>
+                                <field name="print_side"/>
+                                <field name="color"/>
+                                <field name="cylinder_maker"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+                <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
+
+                    <label for="meter_per_kg"/>
+                    <div class="o_row" name="meter_per_kg">
+                        <field name="meter_per_kg" class="oe_inline"/>
+                    </div>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
