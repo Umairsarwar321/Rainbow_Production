@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="reel_report_action_id"
+                model="mrp.production"
+                report_type="qweb-pdf"
+                string="Reel Report"
+                name="manufecture_reel.reel_report_temp_id"
+                file="manufecture_reel.reel_report_temp_id"
+        />
+
+    </data>
+</odoo>

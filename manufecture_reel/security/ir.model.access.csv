@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_reel_detail_id,manufacture_reel,model_reel_detail,base.group_user,1,1,1,1
+access_manufacturing_cylinder,manufacture_cylinder,model_manufacturing_cylinder,base.group_user,1,1,1,1

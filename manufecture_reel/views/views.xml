@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="mrp_form_inherit_id" model="ir.ui.view">
+            <field name="name">MRP Inherit</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+
+                <!--adding extra fields into manfacturing form view-->
+                <xpath expr="//field[@name='bom_id']" position="after">
+                    <field name="production_in_meters"/>
+                    <field name="no_of_reels"/>
+                </xpath>
+                <!--this is reel button which create reels-->
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <button type="object" name="create_reel" string="Reel" class="oe_highlight"/>
+                </xpath>
+
+                <!--this section defile reel detail tab-->
+                <xpath expr="//page[@name='miscellaneous']" position="after">
+                    <page string="Reel Detail" name="reel_detail">
+                        <field name="reel_detail_ids">
+                            <tree string="Reels" editable="bottom">
+                                <field name="sequence_no"/>
+                                <field name="worker_id"/>
+                                <field name="weight"/>
+                                <field name="description"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                <!--                         Add meter field in component-->
+                <xpath expr="/form/sheet/notebook/page/field[@name='move_raw_ids']/tree/field[@name='product_uom_qty']"
+                       position="after">
+                    <field name="meter"/>
+                </xpath>
+
+                <xpath expr="//form/sheet/notebook/page[@name='reel_detail']" position="after">
+                    <page string="Cylinder" name="cylinder">
+
+                        <field name="manufacturing_cylinder_ids">
+                            <tree string="Reels">
+                                <field name="cylinder"/>
+                                <field name="job_code"/>
+                                <field name="job_name"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+<!--                 <xpath expr="//form/sheet/notebook/page/field[@name='workorder_ids']/tree/field[@name='product_id']"-->
+<!--                       position="after">-->
+<!--                    <field name="worker"/>-->
+<!--                    <field name="weight"/>-->
+<!--                    <field name="meter_no"/>-->
+<!--                </xpath>-->
+            </field>
+        </record>
+
+        <record id="mrp_work_center_form_inherit_id" model="ir.ui.view">
+            <field name="name">MRP Work Center Inherit</field>
+            <field name="model">mrp.workcenter</field>
+            <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="cylinder_new"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherit work order Form View to add extra field -->
+        <record id="work_order_inherit_form_id" model="ir.ui.view">
+            <field name="name">Work Order Inherit</field>
+            <field name="model">mrp.workorder</field>
+            <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='duration']" position="after">
+                    <field name="workers_id"/>
+                    <field name="weight"/>
+                    <field name="meter"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>
