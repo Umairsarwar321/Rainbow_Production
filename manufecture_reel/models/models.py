@@ -9,6 +9,7 @@ class ManufacturingModelInherit(models.Model):
     no_of_reels = fields.Integer('No. of Reels')
     reel_detail_ids = fields.One2many('reel.detail', 'mrp_id')
     manufacturing_cylinder_ids = fields.One2many('manufacturing.cylinder', 'mrp_cylinder_id')
+    hide_button = fields.Boolean("Hide Button", default=False)
 
     # This function is used to create manufacturing reel detail
     def create_reel(self):
@@ -19,15 +20,22 @@ class ManufacturingModelInherit(models.Model):
         else:
             for line in range(int(self.no_of_reels)):
                 self.reel_detail_ids = [(0, 0, {'sequence_no': self.lot_producing_id.name + '-' + str(line + 1)})]
-
-                # line.sequence_no = str(self.lot_producing_id.name) + "-" + str(
-                #     self.env['ir.sequence'].next_by_code('reel.detail'))
+            self.hide_button = True
 
     @api.onchange("move_raw_ids")
     def onchange_consumed(self):
         for line in self.move_raw_ids:
-            if line.product_id.product_tmpl_id.meter_per_kg:
-                line.meter = line.product_uom_qty * line.product_id.product_tmpl_id.meter_per_kg
+            if line.quantity_done:
+                line.meter = line.quantity_done * line.product_id.meter_per_kg
+            line.meter = line.product_id.meter_per_kg
+
+    @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity_done')
+    def _get_produced_qty(self):
+        res = super(ManufacturingModelInherit, self)._get_produced_qty()
+        for rec in self:
+            for line in rec.move_raw_ids:
+                line.meter = line.quantity_done * line.product_id.product_tmpl_id.meter_per_kg
+        return res
 
 
 class StackMoveModelInherit(models.Model):

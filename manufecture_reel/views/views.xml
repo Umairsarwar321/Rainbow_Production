@@ -15,7 +15,9 @@
                 </xpath>
                 <!--this is reel button which create reels-->
                 <xpath expr="//field[@name='company_id']" position="after">
-                    <button type="object" name="create_reel" string="Reel" class="oe_highlight"/>
+                    <field name="hide_button" invisible="1"/>
+                    <button type="object" name="create_reel" string="Reel" class="oe_highlight"
+                            attrs="{'invisible': [('hide_button', '=', True)]}"/>
                 </xpath>
 
                 <!--this section defile reel detail tab-->
@@ -31,7 +33,7 @@
                         </field>
                     </page>
                 </xpath>
-                <!--                         Add meter field in component-->
+                <!--Add meter field in component-->
                 <xpath expr="/form/sheet/notebook/page/field[@name='move_raw_ids']/tree/field[@name='product_uom_qty']"
                        position="after">
                     <field name="meter"/>
@@ -49,12 +51,12 @@
                         </field>
                     </page>
                 </xpath>
-<!--                 <xpath expr="//form/sheet/notebook/page/field[@name='workorder_ids']/tree/field[@name='product_id']"-->
-<!--                       position="after">-->
-<!--                    <field name="worker"/>-->
-<!--                    <field name="weight"/>-->
-<!--                    <field name="meter_no"/>-->
-<!--                </xpath>-->
+                <!--                 <xpath expr="//form/sheet/notebook/page/field[@name='workorder_ids']/tree/field[@name='product_id']"-->
+                <!--                       position="after">-->
+                <!--                    <field name="worker"/>-->
+                <!--                    <field name="weight"/>-->
+                <!--                    <field name="meter_no"/>-->
+                <!--                </xpath>-->
             </field>
         </record>
 
