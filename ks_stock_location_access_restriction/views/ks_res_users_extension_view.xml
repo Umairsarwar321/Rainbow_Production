@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ks_res_users_inherited_view" model="ir.ui.view">
+        <field name="name">ks.res.users.extension.view</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tz']" position="after">
+                <field name="ks_default_location_ids" readonly="0"
+                       options="{&quot;no_create&quot;: True, &quot;no_quick_create&quot;: True}"
+                       widget="many2many_tags" domain="[('usage', '=', 'internal')]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

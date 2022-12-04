@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="0">
+        <record model="ir.rule" id="Ks_read_users_location_property">
+            <field name="name">ks_users_property_only</field>
+            <field name="model_id" ref="model_stock_location"/>
+            <field name="groups" eval="[(4, ref('stock.group_stock_user'))]"/>
+            <field name="domain_force">['|',('ks_parent_user_ids','in',user.id),('ks_parent_user_ids','=',False)]
+            </field>
+        </record>
+
+        <record model="ir.rule" id="Ks_read_admin_location_property">
+            <field name="name">ks_users_property_admin</field>
+            <field name="model_id" ref="model_stock_location"/>
+            <field name="groups" eval="[(4, ref('stock.group_stock_manager'))]"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+        </record>
+
+        <record model="ir.rule" id="Ks_read_users_operations_property_admin">
+            <field name="name">ks_users_operation_only_admin</field>
+            <field name="model_id" search="[('model','=','stock.picking.type')]" model="ir.model"/>
+            <field name="groups" eval="[(4, ref('stock.group_stock_manager'))]"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+        </record>
+
+        <record model="ir.rule" id="Ks_read_users_operations_property">
+            <field name="name">ks_users_operation_only</field>
+            <field name="model_id" search="[('model','=','stock.picking.type')]" model="ir.model"/>
+            <field name="groups" eval="[(4, ref('stock.group_stock_user'))]"/>
+            <field name="domain_force">[
+                '&amp;', ('company_id', 'in', company_ids), '&amp;', '|', '|',
+                ('default_location_dest_id', '=', False),
+                ('default_location_dest_id.ks_parent_user_ids', '=', False),
+                ('default_location_dest_id.ks_parent_user_ids', '=', user.id),
+                '|', '|',
+                ('default_location_src_id', '=', False),
+                ('default_location_src_id.ks_parent_user_ids', '=', False),
+                ('default_location_src_id.ks_parent_user_ids', '=', user.id),
+                ]
+            </field>
+        </record>
+
+        <record id="ks_stock_location_access_restriction.ks_group_superuser" model="res.groups">
+            <field name="name">Super User</field>
+            <field name="category_id" ref="base.module_category_inventory_inventory"/>
+            <field name="implied_ids" eval="[(4, ref('stock.group_stock_manager'))]"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ks_stock_location_inherited_view" model="ir.ui.view">
+        <field name="name">ks.stock.location.extension.view</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='usage']" position="after">
+                <field name="ks_is_visible" invisible="1"/>
+                <field name="ks_is_readonly" invisible="1"/>
+                <field name="ks_user_ids" widget="many2many_tags"
+                       attrs="{'invisible': [('ks_is_visible', '!=', True)]}"/>
+                <field name="ks_own_user_ids" widget="many2many_tags"
+                       attrs="{'readonly':[('ks_is_readonly','=',True)]}"/>
+                <field name="ks_parent_user_ids" widget="many2many_tags" readonly="1" invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
