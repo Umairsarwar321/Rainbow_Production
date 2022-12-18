@@ -11,6 +11,9 @@
     'version': '0.1',
     'depends': ['base', 'stock'],
     'data': [
+
+        'security/ir.model.access.csv',
+
         'views/views.xml',
     ],
 }
