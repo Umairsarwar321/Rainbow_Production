@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+manager_access_check_book_seq,check_book_seq_access_manager,model_check_book_sequence,account.group_account_manager,1,1,1,1
+acc_access_check_book_seq,acc_check_book_seq_access,model_check_book_sequence,account.group_account_readonly,1,0,0,0
+user_access_check_book_seq,user_check_book_seq_access,model_check_book_sequence,account.group_account_user,1,0,0,0

@@ -1,0 +1,103 @@
+<odoo>
+  <data>
+    <!-- Inheriting Account Journal form view for Cheque Sequence Feature -->
+    <record id="account_journal_form_inherit_cheque_seq" model="ir.ui.view">
+        <field name="name">account.journal.form.inherit.cheque.seq</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account_check_printing.view_account_journal_form_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='check_next_number']" position="after">
+                <field name="check_manual_sequencing" invisible="1"/>
+                <field name="is_check_created" invisible="1"/>
+                <field name="total_cheques" attrs="{'invisible': [('check_manual_sequencing', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+      <!--   Check Sequence views  -->
+      <record id="check_book_seq_form_view" model="ir.ui.view">
+        <field name="name">check.book.sequence.form.view</field>
+        <field name="model">check.book.sequence</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required='1'/>
+                            <field name="journal_id"/>
+                            <field name="is_consumed"/>
+                        </group>
+                    <group>
+                    </group>
+                </group>
+            </sheet>
+            </form>
+        </field>
+    </record>
+      <!-- explicit list view definition -->
+      <record model="ir.ui.view" id="check_book_sequence_list">
+          <field name="name">Check Book Sequence list</field>
+          <field name="model">check.book.sequence</field>
+          <field name="arch" type="xml">
+            <tree>
+              <field name="name" required="1"/>
+              <field name="journal_id"/>
+              <field name="is_consumed"/>
+            </tree>
+          </field>
+      </record>
+      <!-- actions opening views on models -->
+      <record model="ir.actions.act_window" id="check_book_sequence_action_window">
+          <field name="name">Check Book Sequence</field>
+          <field name="res_model">check.book.sequence</field>
+          <field name="view_mode">tree,form</field>
+      </record>
+
+      <!-- Top menu item -->
+      <menuitem name="Check Book Sequence" id="check_book_sequence_main_menu" parent='account.account_banks_menu' sequence='10' action='check_book_sequence_action_window'/>
+
+
+      <!-- Inheriting Payment Register form view for Cheque Sequence Feature -->
+      <record id="acc_pay_reg_form_inherit_cheque_seq" model="ir.ui.view">
+          <field name="name">account.pay.register.form.inherit.cheque.seq</field>
+          <field name="model">account.payment.register</field>
+          <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+          <field name="arch" type="xml">
+              <xpath expr="//field[@name='partner_bank_id']" position="after">
+                  <field name="journal_type" invisible="1"/>
+                  <field name="check_id" attrs="{'invisible': [('journal_type', '!=', 'bank')]}" domain="[('is_consumed', '=', False)]"/>
+              </xpath>
+          </field>
+      </record>
+      <!-- Inheriting Payment form view for Cheque Sequence Feature -->
+      <record id="acc_pay_form_inherit_cheque_seq" model="ir.ui.view">
+          <field name="name">account.pay.form.inherit.cheque.seq</field>
+          <field name="model">account.payment</field>
+          <field name="inherit_id" ref="account.view_account_payment_form"/>
+          <field name="arch" type="xml">
+              <xpath expr="//field[@name='journal_id']" position="after">
+                  <field name="journal_type" invisible="1"/>
+                  <field name="check_id" attrs="{'invisible': [('journal_type', '!=', 'bank')]}" domain="[('is_consumed', '=', False)]"/>
+              </xpath>
+          </field>
+      </record>
+
+      <!-- Inheriting Move form view for Cheque Sequence Feature -->
+      <record id="acc_move_form_inherit_cheque_seq" model="ir.ui.view">
+          <field name="name">account.move.form.inherit.cheque.seq</field>
+          <field name="model">account.move</field>
+          <field name="inherit_id" ref="account.view_move_form"/>
+          <field name="arch" type="xml">
+              <xpath expr="//field[@name='payment_reference']" position="after">
+<!--                  <field name="journal_type" invisible="1"/>-->
+                  <field name="move_type" invisible="1"/>
+                  <field name="check_id" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}" readonly="1" force_save="1" domain="[('is_consumed', '=', True)]"/>
+              </xpath>
+          </field>
+      </record>
+
+
+
+  </data>
+</odoo>
